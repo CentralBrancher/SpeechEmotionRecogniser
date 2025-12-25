@@ -5,12 +5,12 @@ The tool loads a WAV file, runs inference via **ONNX Runtime**, and outputs the 
 
 ---
 
-## ✨ Features
+## Features
 
-* 🎧 WAV audio loading (mono, 16 kHz) using **dr_wav**
-* 🧠 Speech emotion classification with **Wav2Vec2**
-* ⚡ Fast CPU inference via **ONNX Runtime**
-* 🖥️ Clean CLI output:
+* WAV audio loading (mono, 16 kHz) using **dr_wav**
+* Speech emotion classification with **Wav2Vec2**
+* Fast CPU inference via **ONNX Runtime**
+* Clean CLI output:
 
   ```text
   Prediction: Anger
@@ -19,7 +19,7 @@ The tool loads a WAV file, runs inference via **ONNX Runtime**, and outputs the 
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```text
 SpeechEmotionRecogniser/
@@ -53,7 +53,7 @@ SpeechEmotionRecogniser/
 
 ---
 
-## 🧠 Model
+## Model
 
 This project uses:
 
@@ -81,15 +81,15 @@ include/Domain/EmotionLabels.h
 
 ---
 
-## ⚠️ Important: Model Format
+## Important: Model Format
 
-✅ **Use the FP16 model**:
+**Use the FP16 model**:
 
 ```
 model_fp16.onnx
 ```
 
-❌ **Do NOT use**:
+**Do NOT use**:
 
 ```
 model_int8.onnx
@@ -102,7 +102,7 @@ Using `model_int8.onnx` will cause runtime errors.
 
 ---
 
-## 🔧 Dependencies
+## Dependencies
 
 ### Required
 
@@ -144,22 +144,22 @@ cannot open source file "onnxruntime_cxx_api.h"
 
 ---
 
-## 🛠️ Build Instructions (Windows)
+## Build Instructions (Windows)
 
-### 1️⃣ Clone the repository
+### Clone the repository
 
 ```bash
 git clone <your-repo-url>
 cd SpeechEmotionRecogniser
 ```
 
-### 2️⃣ Create build directory
+### Create build directory
 
 ```bash
 cmake -S . -B build
 ```
 
-### 3️⃣ Build (Release)
+### Build (Release)
 
 ```bash
 cmake --build build --config Release
@@ -167,7 +167,7 @@ cmake --build build --config Release
 
 ---
 
-## ▶️ Running the Program
+## Running the Program
 
 From the `build` directory:
 
@@ -188,7 +188,7 @@ Confidence: 0.812
 
 ---
 
-## 🧪 Audio Requirements
+## Audio Requirements
 
 * WAV format
 * Mono (auto-converted if stereo)
@@ -199,7 +199,7 @@ Handled automatically by `AudioLoader`.
 
 ---
 
-## 🧩 Implementation Overview
+## Implementation Overview
 
 ### Audio Loading
 
@@ -221,7 +221,7 @@ Handled automatically by `AudioLoader`.
 
 ---
 
-## 🧠 Design Notes
+## Design Notes
 
 * INT8 quantized models are **not supported** by default ORT CPU builds
 * FP32 Wav2Vec2 runs near real-time on modern CPUs
@@ -229,14 +229,7 @@ Handled automatically by `AudioLoader`.
 
 ---
 
-## 📜 License
-
-This project is provided for **research and educational use**.
-Model weights are subject to their original license from Hugging Face.
-
----
-
-## 🙌 Credits
+## Credits
 
 * **Hugging Face** – Wav2Vec2
 * **prithivMLmods** – Speech Emotion ONNX model
