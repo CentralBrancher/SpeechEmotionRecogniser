@@ -38,7 +38,7 @@ SpeechEmotionRecogniser/
 │   └── Inference/
 │       └── EmotionRecognizer.cpp
 ├── models/
-│   └── model.onnx
+│   └── model_fp16.onnx
 ├── data/
 │   └── samples/
 │       └── anger.wav
@@ -107,15 +107,40 @@ Using `model_int8.onnx` will cause runtime errors.
 ### Required
 
 * **CMake ≥ 3.20**
-* **MSVC (Visual Studio 2022)**
 * **ONNX Runtime (Windows x64)**
 * **dr_wav** (single-header WAV loader)
 
 ### Included via `third_party/`
 
-* `onnxruntime/include`
-* `onnxruntime/lib/onnxruntime.lib`
 * `dr_wav/dr_wav.h`
+
+### ONNX Runtime (Required)
+
+You **must** provide ONNX Runtime yourself. This project does **not** fetch it automatically.
+
+You have two supported options:
+
+**Option A (Recommended): Vendor ONNX Runtime in `third_party/`**
+
+```
+third_party/onnxruntime/
+├── include/   (onnxruntime_cxx_api.h, etc.)
+└── lib/       (onnxruntime.lib)
+```
+
+This is the layout expected by `CMakeLists.txt`.
+
+**Option B: System-wide ONNX Runtime install**
+If ONNX Runtime is installed elsewhere, you must:
+
+* Add its `include/` directory to `target_include_directories`
+* Link against `onnxruntime.lib` in `target_link_libraries`
+
+If ONNX Runtime headers or libraries are missing, the build will fail with errors such as:
+
+```
+cannot open source file "onnxruntime_cxx_api.h"
+```
 
 ---
 
@@ -204,16 +229,6 @@ Handled automatically by `AudioLoader`.
 
 ---
 
-## 🚀 Future Improvements
-
-* Sliding-window inference for long audio
-* Batch processing
-* DirectML / CUDA support
-* VAD (Voice Activity Detection)
-* JSON output mode
-
----
-
 ## 📜 License
 
 This project is provided for **research and educational use**.
@@ -227,13 +242,3 @@ Model weights are subject to their original license from Hugging Face.
 * **prithivMLmods** – Speech Emotion ONNX model
 * **ONNX Runtime Team**
 * **dr_wav** by David Reid
-
----
-
-## ✅ Status
-
-✔ Audio loading working
-✔ ONNX inference working (FP32)
-✔ CLI prediction output
-
-**Ready for use.**
