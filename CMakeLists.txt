@@ -12,13 +12,22 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_executable(SpeechEmotionRecogniser
     src/main.cpp
     src/Audio/AudioLoader.cpp
+    src/Inference/EmotionRecognizer.cpp
 )
 
 # ---- Include paths ----
 target_include_directories(SpeechEmotionRecogniser
     PRIVATE
+        ${PROJECT_SOURCE_DIR}/src
         ${PROJECT_SOURCE_DIR}/include
         ${PROJECT_SOURCE_DIR}/third_party
+        ${PROJECT_SOURCE_DIR}/third_party/onnxruntime/include
+)
+
+# ---- Link ONNX Runtime lib ----
+target_link_libraries(SpeechEmotionRecogniser
+    PRIVATE
+        ${PROJECT_SOURCE_DIR}/third_party/onnxruntime/lib/onnxruntime.lib
 )
 
 # ---- Windows specifics ----

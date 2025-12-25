@@ -5,9 +5,10 @@
 class EmotionRecognizer {
 public:
     explicit EmotionRecognizer(const std::string& modelPath);
+    ~EmotionRecognizer();  // Destructor to clean up ONNX session
+
     std::vector<float> Predict(const std::vector<float>& waveform);
 
 private:
-    void* env;
-    void* session;
+    void* session;  // Raw pointer to Ort::Session
 };
