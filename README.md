@@ -1,0 +1,239 @@
+# SpeechEmotionRecogniser
+
+A **C++17 command-line application** for speech emotion recognition using a fine-tuned **Wav2Vec2 ONNX model**.
+The tool loads a WAV file, runs inference via **ONNX Runtime**, and outputs the predicted emotion and confidence.
+
+---
+
+## ✨ Features
+
+* 🎧 WAV audio loading (mono, 16 kHz) using **dr_wav**
+* 🧠 Speech emotion classification with **Wav2Vec2**
+* ⚡ Fast CPU inference via **ONNX Runtime**
+* 🖥️ Clean CLI output:
+
+  ```text
+  Prediction: Anger
+  Confidence: 0.823
+  ```
+
+---
+
+## 📁 Project Structure
+
+```text
+SpeechEmotionRecogniser/
+├── CMakeLists.txt
+├── include/
+│   ├── Audio/
+│   │   └── AudioLoader.h
+│   ├── Domain/
+│   │   └── EmotionLabels.h
+│   └── Inference/
+│       └── EmotionRecognizer.h
+├── src/
+│   ├── main.cpp
+│   ├── Audio/
+│   │   └── AudioLoader.cpp
+│   └── Inference/
+│       └── EmotionRecognizer.cpp
+├── models/
+│   └── model.onnx
+├── data/
+│   └── samples/
+│       └── anger.wav
+├── third_party/
+│   ├── dr_wav/
+│   │   └── dr_wav.h
+│   └── onnxruntime/
+│       ├── include/
+│       └── lib/
+└── build/
+```
+
+---
+
+## 🧠 Model
+
+This project uses:
+
+**`prithivMLmods/Speech-Emotion-Classification-ONNX`**
+A Wav2Vec2-based speech emotion classifier fine-tuned on emotional speech data.
+
+### Supported Emotions
+
+| Index | Label     |
+| ----: | --------- |
+|     0 | Anger     |
+|     1 | Calm      |
+|     2 | Disgust   |
+|     3 | Fear      |
+|     4 | Happy     |
+|     5 | Neutral   |
+|     6 | Sad       |
+|     7 | Surprised |
+
+Defined in:
+
+```cpp
+include/Domain/EmotionLabels.h
+```
+
+---
+
+## ⚠️ Important: Model Format
+
+✅ **Use the FP16 model**:
+
+```
+model_fp16.onnx
+```
+
+❌ **Do NOT use**:
+
+```
+model_int8.onnx
+```
+
+### Why?
+
+The default Windows ONNX Runtime CPU build **does not support `ConvInteger`** used in INT8 models.
+Using `model_int8.onnx` will cause runtime errors.
+
+---
+
+## 🔧 Dependencies
+
+### Required
+
+* **CMake ≥ 3.20**
+* **MSVC (Visual Studio 2022)**
+* **ONNX Runtime (Windows x64)**
+* **dr_wav** (single-header WAV loader)
+
+### Included via `third_party/`
+
+* `onnxruntime/include`
+* `onnxruntime/lib/onnxruntime.lib`
+* `dr_wav/dr_wav.h`
+
+---
+
+## 🛠️ Build Instructions (Windows)
+
+### 1️⃣ Clone the repository
+
+```bash
+git clone <your-repo-url>
+cd SpeechEmotionRecogniser
+```
+
+### 2️⃣ Create build directory
+
+```bash
+cmake -S . -B build
+```
+
+### 3️⃣ Build (Release)
+
+```bash
+cmake --build build --config Release
+```
+
+---
+
+## ▶️ Running the Program
+
+From the `build` directory:
+
+```bash
+Release\SpeechEmotionRecogniser.exe ..\data\samples\anger.wav
+```
+
+### Example Output
+
+```text
+Audio loaded successfully!
+Sample rate: 16000
+Frames: 100533
+
+Prediction: Anger
+Confidence: 0.812
+```
+
+---
+
+## 🧪 Audio Requirements
+
+* WAV format
+* Mono (auto-converted if stereo)
+* 16,000 Hz sample rate (required by Wav2Vec2)
+* Float PCM internally
+
+Handled automatically by `AudioLoader`.
+
+---
+
+## 🧩 Implementation Overview
+
+### Audio Loading
+
+* Uses **dr_wav**
+* Converts stereo → mono
+* Outputs `std::vector<float>` + sample rate
+
+### Inference
+
+* ONNX Runtime C++ API
+* Single shared `Ort::Env`
+* Dynamic waveform length
+* Outputs raw logits
+
+### Post-processing
+
+* Softmax applied in C++
+* Highest probability selected
+
+---
+
+## 🧠 Design Notes
+
+* INT8 quantized models are **not supported** by default ORT CPU builds
+* FP32 Wav2Vec2 runs near real-time on modern CPUs
+* Designed for clarity and debuggability over premature optimization
+
+---
+
+## 🚀 Future Improvements
+
+* Sliding-window inference for long audio
+* Batch processing
+* DirectML / CUDA support
+* VAD (Voice Activity Detection)
+* JSON output mode
+
+---
+
+## 📜 License
+
+This project is provided for **research and educational use**.
+Model weights are subject to their original license from Hugging Face.
+
+---
+
+## 🙌 Credits
+
+* **Hugging Face** – Wav2Vec2
+* **prithivMLmods** – Speech Emotion ONNX model
+* **ONNX Runtime Team**
+* **dr_wav** by David Reid
+
+---
+
+## ✅ Status
+
+✔ Audio loading working
+✔ ONNX inference working (FP32)
+✔ CLI prediction output
+
+**Ready for use.**
